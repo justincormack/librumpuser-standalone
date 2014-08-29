@@ -9,6 +9,7 @@ SOLIBS=-lpthread -lrt -ldl
 SONAME=librumpuser.so.0
 TARGET=librumpuser.so.0.1
 
+RUMPMAKE=${PWD}/buildrump.sh/obj/tooldir/rumpmake
 
 default:	all
 
