@@ -13,6 +13,7 @@ rump:
 		./buildrump.sh/buildrump.sh -k -qq
 
 rumpuser:	rump
+		cp librumpuser/rumpuser_component.h rump/include/rump/
 		( cd librumpuser && ${RUMPMAKE} && cd .. )
 		cp -a ${LIBS} rump/lib/
 
