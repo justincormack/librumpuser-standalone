@@ -10,7 +10,7 @@ default:	all
 all:		rump rumpuser
 
 rump:		
-		./buildrump.sh/buildrump.sh -k
+		./buildrump.sh/buildrump.sh -k -qq
 
 rumpuser:	rump
 		( cd librumpuser && ${RUMPMAKE} && cd .. )
