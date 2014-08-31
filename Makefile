@@ -1,34 +1,24 @@
-INCLUDE=-I./rump/include/ -I./buildrump.sh/src/tools/compat
-WARN=-Wall -Wstrict-prototypes -Wmissing-prototypes -Wpointer-arith -Wno-sign-compare  -Wno-traditional  -Wa,--fatal-warnings -Wreturn-type -Wswitch -Wshadow -Wcast-qual -Wwrite-strings -Wextra -Wno-unused-parameter -Wno-sign-compare -Wold-style-definition -Wsign-compare -Wformat=2   -Wno-format-zero-length  -Werror
-CFLAGS=${INCLUDE} -O2 -g -fPIC -std=gnu99 ${WARN} -DLIBRUMPUSER -D_REENTRANT  -c -DGPROF -DPROF
 SRCDIR=./librumpuser
-SOURCES=rumpuser_bio.c rumpuser_component.c rumpuser_dl.c rumpuser_pth.c rumpuser_sp.c rumpuser.c rumpuser_daemonize.c rumpuser_errtrans.c
-OBJECTS=$(SOURCES:.c=.o)
-DOTA=librumpuser.a
-SOLIBS=-lpthread -lrt -ldl
-SONAME=librumpuser.so.0
-TARGET=librumpuser.so.0.1
+LIBS=${SRCDIR}/librumpuser.a ${SRCDIR}/librumpuser.so ${SRCDIR}/librumpuser.so.0 ${SRCDIR}/librumpuser.so.0.1
 
-RUMPMAKE=${PWD}/buildrump.sh/obj/tooldir/rumpmake
+RUMPMAKE=${PWD}/obj/tooldir/rumpmake
+
+.PHONY:		all rump rumpuser clean test
 
 default:	all
 
-all:		rump ${TARGET}
+all:		rump rumpuser
 
 rump:		
-		./buildrump.sh/buildrump.sh -d ./rump -o ./buildrump.sh/obj -s ./buildrump.sh/src checkout fullbuild
+		./buildrump.sh/buildrump.sh -k
 
-%.o:		${SRCDIR}/%.c rump
-		${CC} $< ${CFLAGS} -o $@
+rumpuser:	rump
+		( cd librumpuser && ${RUMPMAKE} && cd .. )
+		cp -a ${LIBS} rump/lib/
 
-${DOTA}:	${OBJECTS} rump
-		${AR} rcs ${DOTA} ${OBJECTS}
-
-${TARGET}:	${DOTA}
-		${CC} -Wl,-x -shared -Wl,-soname,${SONAME} -Wl,--warn-shared-textrel -o ${TARGET} -Wl,--whole-archive ${DOTA} -Wl,--no-whole-archive ${SOLIBS}
+test:		
+		( LD_LIBRARY_PATH=${PWD}/rump/lib cd ljsyscall && luajit test/test.lua && cd .. )
 
 clean:		
-		rm -rf ${OBJECTS} ${DOTA} ${TARGET} *~
+		rm -rf rump src obj ${LIBS} *~
 
-cleanrump:	
-		rm -rf rump
