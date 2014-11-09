@@ -15,11 +15,11 @@ rump:
 rumpuser:	rump
 		cp librumpuser/rumpuser_component.h rump/include/rump/
 		( export CPPFLAGS=-DRUMPUSER_CONFIG=yes; \
-		  cd librumpuser && ./configure && ${RUMPMAKE} && cd .. )
+		  cd librumpuser && ./configure && ${RUMPMAKE} )
 		cp -a ${LIBS} rump/lib/
 
 test:		
-		( LD_LIBRARY_PATH=${PWD}/rump/lib cd ljsyscall && luajit test/test.lua && cd .. )
+		( export LD_LIBRARY_PATH=${PWD}/rump/lib; cd ljsyscall && luajit test/test.lua rump )
 
 clean:		
 		rm -rf rump src obj ${LIBS} *~ \
