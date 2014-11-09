@@ -21,5 +21,6 @@ test:
 		( LD_LIBRARY_PATH=${PWD}/rump/lib cd ljsyscall && luajit test/test.lua && cd .. )
 
 clean:		
-		rm -rf rump src obj ${LIBS} *~
+		rm -rf rump src obj ${LIBS} *~ librumpuser/*.o librumpuser/*.a librumpuser/*.pico librumpuser/*.map librumpuser/*.cat3
+
 
