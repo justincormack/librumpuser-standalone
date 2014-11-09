@@ -23,7 +23,7 @@ test:
 
 clean:		
 		rm -rf rump src obj ${LIBS} *~ \
-		librumpuser/*.o librumpuser/*.a librumpuser/*.pico librumpuser/*.map librumpuser/*.cat3 \
+		librumpuser/*.o librumpuser/*.a librumpuser/*.pico librumpuser/*.map \
 		librumpuser/config.log librumpuser/config.status librumpuser/rumpuser_config.h
 
 
